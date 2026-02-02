@@ -1,0 +1,58 @@
+services:
+  
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: ecommerce-sqlserver
+    user: root
+    environment:
+      ACCEPT_EULA: "1"
+      SA_PASSWORD: "YourStrong@Passw0rd"
+      MSSQL_PID: "Developer"
+      MSSQL_RUN_AS_ROOT: "TRUE"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-ecommerce-data:/var/opt/mssql
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "pgrep", "sqlservr"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - angular-maven-net
+
+  backend:
+    build: ./backend
+    container_name: ecommerce-backend
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    ports:
+      - "8095:8080"
+    restart: unless-stopped
+    environment:
+      # FIX THIS TOO: Use container name, not host.docker.internal
+      SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver:1433;database=angularspringbootecommerce;encrypt=false;trustServerCertificate=true"
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: "YourStrong@Passw0rd"
+    networks:
+      - angular-maven-net
+
+  frontend:
+    build: ./frontend
+    container_name: ecommerce-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - angular-maven-net
+
+volumes:
+  sqlserver-ecommerce-data:
+
+networks:
+  angular-maven-net:
+    driver: bridge
