@@ -23,7 +23,7 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: Run Maven Project
-        run: mvn -f ../../backend/pom.xml spring-boot:run &
+        run: mvn -f backend/pom.xml spring-boot:run 
         shell: bash
 
   frontend-ci:
@@ -40,21 +40,24 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+        working-directory: frontend
 
       - name: Run Tests
         run: npm test
         shell: bash
+        working-directory: frontend
 
       - name: Build Project
         run: npm run build
         shell: bash
+        working-directory: frontend
 
   docker-ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - name: Docker CI
         uses: ./.github/actions/docker-actions
         with:
