@@ -26,13 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Frontend CI
-        uses: ./.github/actions/js-actions/action.yaml
+        uses: ./.github/actions/js-actions
 
   docker-ci:
     runs-on: ubuntu-latest
     steps:
       - name: Docker CI
-        uses: ./.github/actions/docker-actions/action.yaml
+        uses: ./.github/actions/docker-actions
         with:
           docker-username: ${{ secrets.DOCKER_USERNAME }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
