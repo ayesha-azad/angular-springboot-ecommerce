@@ -1,5 +1,4 @@
 services:
-  
   sqlserver:
     image: mcr.microsoft.com/azure-sql-edge:latest
     container_name: ecommerce-sqlserver
@@ -24,6 +23,7 @@ services:
       - angular-maven-net
 
   backend:
+    image: ${DOCKER_USERNAME}/ecommerce-backend:latest
     build: ./backend
     container_name: ecommerce-backend
     depends_on:
@@ -41,6 +41,7 @@ services:
       - angular-maven-net
 
   frontend:
+    image: ${DOCKER_USERNAME}/ecommerce-frontend:latest
     build: ./frontend
     container_name: ecommerce-frontend
     ports:

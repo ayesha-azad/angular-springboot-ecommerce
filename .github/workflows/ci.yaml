@@ -1,10 +1,8 @@
-name: Make CI 
+name: Make CI
 
-on: 
-  push
+on: push
 
-jobs: 
-
+jobs:
   backend-build:
     runs-on: ubuntu-latest
 
@@ -15,16 +13,12 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'maven'
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
 
       - name: Build with Maven
-        run: mvn clean install -DskipTests
-
-      - name: Run Maven Project
-        run: mvn -f backend/pom.xml spring-boot:run 
-        shell: bash
+        run: mvn -f backend/pom.xml clean install -DskipTests
 
   frontend-ci:
     runs-on: ubuntu-latest
@@ -35,8 +29,8 @@ jobs:
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install Dependencies
         run: npm ci
