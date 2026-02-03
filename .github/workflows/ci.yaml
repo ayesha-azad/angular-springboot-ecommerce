@@ -1,0 +1,38 @@
+name: Make CI 
+
+on: 
+  push
+
+jobs: 
+
+  backend-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+  frontend-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Frontend CI
+        uses: ./.github/actions/js-actions/action.yaml
+
+  docker-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker CI
+        uses: ./.github/actions/docker-actions/action.yaml
+        with:
+          docker-username: ${{ secrets.DOCKER_USERNAME }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
