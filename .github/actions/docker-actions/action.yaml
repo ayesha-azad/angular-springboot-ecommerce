@@ -24,6 +24,7 @@ runs:
     - name: Build Stage
       run: docker compose build
       shell: bash
+      working-directory: ${{ github.workspace }}
 
     - name: Push Stage
       run: docker compose push 
